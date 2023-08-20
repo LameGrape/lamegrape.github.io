@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i hate google sheets</title>
+</head>
+<body>
+    <div id="table">
+
+    </div>
+    <script>
+        tasks = [
+            "inshallah",
+            "inshallah",
+            "inshallah",
+            "inshallah",
+            "inshallah",
+            "inshallah",
+            "inshallah",
+            "inshallah",
+            "inshallah",
+            "inshallah"
+        ]
+
+        table = document.querySelector("#table")
+        table.innerHTML += "<input type='checkbox'>".repeat(31 * tasks.length)
+    </script>
+    <style>
+        #table{
+            display: table;
+            column-count: 31;
+            
+        }
+    </style>
+</body>
+</html>
