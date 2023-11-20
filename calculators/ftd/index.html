@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FtD Calculators</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="section">
+        <h1>Weight conversion</h1>
+        <input type="number" id="wkg1" oninput="wkg1()" value=0> <label for="wkg1">FTD Weight</label><br>
+        <h2 id="wkg0"><b>0 kg</b></h2>
+    </div>
+
+    <script>
+        function wkg1(){ // weight to kilograms
+            weight = document.querySelector("#wkg1").value
+            if(Number(weight) == NaN) return
+            output = document.querySelector("#wkg0")
+            kilograms = weight * 7850 / 40
+            pounds = kilograms * 2.204623
+            tons = pounds / 2000
+            output.innerHTML = `${kilograms.toFixed(2)} kg<br>${pounds.toFixed(2)} lbs<br>${tons.toFixed(2)} tons`
+        }
+    </script>
+</body>
+</html>
