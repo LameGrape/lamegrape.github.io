@@ -1,0 +1,116 @@
+@font-face {
+    font-family: NotoSans;
+    src: url("fonts/NotoSansDisplay-Regular.ttf");
+}
+
+@font-face {
+    font-family: NotoSans-Bold;
+    src: url("fonts/NotoSansDisplay-Bold.ttf");
+}
+
+@font-face {
+    font-family: NotoSans-Italic;
+    src: url("fonts/NotoSansDisplay-Italic.ttf")
+}
+
+@font-face {
+    font-family: NotoSans-BoldItalic;
+    src: url("fonts/NotoSansDisplay-BoldItalic.ttf");
+}
+
+:root {
+    --main: #1B283D;
+    --secondary: #C9CED2;
+    --darker: #0E1521;
+    --brighter: #2C4163;
+    --trim: #2179FF;
+    --btn-neutral: #4471D3;
+    --neutral-border: #15263D;
+    --btn-positive: #3FD748;
+    --positive-border: #134119;
+    --btn-negative: #D34245;
+    --negative-border: #3E1618;
+}
+
+body {
+    padding: 10px;
+    font-family: NotoSans;
+    background: var(--main);
+    overflow: hidden;
+    color: white;
+}
+
+::selection {
+    background: var(--btn-neutral);
+}
+
+/* Buttons */
+
+button {
+    padding: 8px;
+    outline: 2px solid;
+    outline-color: var(--neutral-border);
+    outline-offset: -3px;
+    border: none;
+    border-radius: 10px;
+    background: var(--btn-neutral);
+    color: white;
+    font-size: 12pt;
+}
+
+button.red {
+    background: var(--btn-negative);
+    outline-color: var(--negative-border);
+}
+
+button.green {
+    background: var(--btn-positive);
+    outline-color: var(--positive-border);
+    color: black;
+}
+
+
+/* Inputs */
+
+input {
+    border: 2px solid var(--trim);
+    background: var(--secondary);
+    font-size: 12pt;
+    color: black;
+    padding: 2px;
+    outline: none;
+    caret-color: red;
+    font-family: NotoSans-BoldItalic;
+    margin: 2px;
+}
+
+label {
+    user-select: none;
+    border: 2px solid var(--trim);
+    background: var(--secondary);
+    font-size: 12pt;
+    color: black;
+    padding: 2px;
+    margin: 2px;
+}
+
+/* Sections */
+
+.section {
+    padding: 10px;
+    border: 3px solid var(--darker);
+    display: inline-block;
+    border-radius: 10px;
+    background: var(--brighter);
+}
+
+h1 {
+    font-family: NotoSans-Bold;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
