@@ -11,16 +11,28 @@
         <option value="sort0">Sort (hue)</option>
         <option value="sort1">Sort (saturation)</option>
         <option value="sort2">Sort (value)</option>
-    </select><br><br>
-    <b>Image</b> <img id="input"> <input type="file" id="image" onchange="calculate(this.files[0])"><br>
+    </select><br>
+    <b>Image</b> <img id="input"> <input type="file" autocomplete="off" id="image"
+        onchange="calculate(this.files[0])">&Tab;<b>Manually Add</b> <input type="text" autocomplete="off"
+        placeholder="hex code..." id="manualColor"> <button
+        onclick="colors.push(hexToRgb(document.querySelector('#manualColor').value)); drawColors()">Add</button><br>
     <span>due to some stupid bug i had to fix, if the colors are too similar they might get dropped so:</span><br><br>
     <b>Similarity Tolerance</b> <input type="number" min=0 max=10 value=2 id="tolerance"> <span>(will apply when
-        uploading image)</span><br><br>
+        uploading image)</span><br>
+    <p hidden id="help">left click to copy hex, right click to delete</p>
+    <canvas id="colors" height="0" oncontextmenu="return false"></canvas><br>
     <button id="go" onclick="doThingy()">GO!!!</button><br>
     <canvas id="result"></canvas>
+    <p hidden id="averageResult"></p>
     <script>
         const canvas = document.querySelector("#result")
+        const colorCanvas = document.querySelector("#colors")
         const ctx = canvas.getContext("2d")
+        const colorCtx = colorCanvas.getContext("2d")
+
+        let selecting = false
+        let selection = 0
+        const mouse = { x: 0, y: 0 }
 
         let colors = []
 
@@ -31,20 +43,41 @@
                 image.src = e.target.result;
                 document.querySelector("#input").src = e.target.result
                 image.onload = () => {
-                    canvas.width = image.width
-                    canvas.height = image.height
-                    ctx.imageSmoothingEnabled = false
-                    ctx.drawImage(image, 0, 0)
-                    colors = getColors(ctx.getImageData(0, 0, image.width, image.height))
-                    ctx.clearRect(0, 0, image.width, image.height)
+                    colorCanvas.width = image.width
+                    colorCanvas.height = image.height
+                    colorCtx.imageSmoothingEnabled = false
+                    colorCtx.drawImage(image, 0, 0)
+                    colors = getColors(colorCtx.getImageData(0, 0, image.width, image.height))
+                    drawColors()
+                    document.querySelector("#help").removeAttribute("hidden")
                 }
             }
             reader.readAsDataURL(file)
         }
 
+        function drawColors() {
+            let rect = colorCanvas.getBoundingClientRect()
+            let dx = mouse.x - rect.x
+            let dy = mouse.y - rect.y
+            selection = Math.floor(dx / 64)
+
+            colorCanvas.height = 64
+            colorCanvas.width = 64 * colors.length
+            for (let color of colors) {
+                colorCtx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`
+                colorCtx.fillRect(colors.indexOf(color) * 64, 0, 64, 64)
+            }
+            if (selecting) {
+                colorCtx.strokeStyle = "darkorange"
+                colorCtx.lineWidth = 4
+                colorCtx.strokeRect(selection * 64, 0, 64, 64)
+            }
+        }
+
         function doThingy() {
             let mode = document.querySelector("#mode").value
             if (mode.startsWith("sort")) {
+                document.querySelector("#averageResult").setAttribute("hidden", "")
                 let index = parseInt(mode[4])
                 canvas.height = 64
                 canvas.width = 64 * colors.length
@@ -55,6 +88,7 @@
                 }
             }
             if (mode == "average") {
+                document.querySelector("#averageResult").removeAttribute("hidden")
                 let average = colors.reduce((a, b) => {
                     return [
                         a[0] + Math.pow(b[0], 2),
@@ -64,7 +98,13 @@
                 }, initialValue = [0, 0, 0])
                 canvas.width = 128
                 canvas.height = 128
-                ctx.fillStyle = `rgb(${Math.sqrt(average[0] / colors.length)},${Math.sqrt(average[1] / colors.length)},${Math.sqrt(average[2] / colors.length)})`
+                let avgColor = [
+                    Math.floor(Math.sqrt(average[0] / colors.length)),
+                    Math.floor(Math.sqrt(average[1] / colors.length)),
+                    Math.floor(Math.sqrt(average[2] / colors.length))
+                ]
+                document.querySelector("#averageResult").innerText = rgbToHex(avgColor)
+                ctx.fillStyle = `rgb(${avgColor.join(",")})`
                 ctx.fillRect(0, 0, 128, 128)
             }
         }
@@ -115,6 +155,45 @@
             }
 
             return [h, s, v]
+        }
+
+        function componentToHex(c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+
+        function rgbToHex(color) {
+            return "#" + componentToHex(color[0]) + componentToHex(color[1]) + componentToHex(color[2]);
+        }
+
+        function hexToRgb(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? [
+                parseInt(result[1], 16),
+                parseInt(result[2], 16),
+                parseInt(result[3], 16)
+            ] : null;
+        }
+
+        window.onmousemove = e => {
+            mouse.x = e.clientX
+            mouse.y = e.clientY
+            let rect = colorCanvas.getBoundingClientRect()
+            selecting = (mouse.x > rect.x && mouse.y > rect.y &&
+                mouse.x < rect.x + (64 * colors.length) && mouse.y < rect.y + 64)
+            drawColors()
+        }
+        window.onmousedown = e => {
+            if (!selecting) return
+            if (e.button == 2) {
+                colors = colors.filter((a, i) => i != selection)
+                drawColors()
+                e.preventDefault()
+            }
+            if (e.button == 0) {
+                navigator.clipboard.writeText(rgbToHex(colors[selection]))
+                alert(`Copied ${rgbToHex(colors[selection])} to the clipboard`)
+            }
         }
     </script>
     <style>
