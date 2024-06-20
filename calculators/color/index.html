@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>color woo</title>
+</head>
+<body>
+    <b>Mode</b> <select id="mode">
+        <option value="average">Average</option>
+        <option value="sort0">Sort (hue)</option>
+        <option value="sort1">Sort (saturation)</option>
+        <option value="sort2">Sort (value)</option>
+    </select><br><br>
+    <b>Image</b> <img id="input"> <input type="file" id="image" onchange="calculate(this.files[0])"><br>
+    <span>due to some stupid bug i had to fix, if the colors are too similar they might get dropped so:</span><br><br>
+    <b>Similarity Tolerance</b> <input type="number" min=0 max=10 value=2 id="tolerance"> <span>(will apply when
+        uploading image)</span><br><br>
+    <button id="go" onclick="doThingy()">GO!!!</button><br>
+    <canvas id="result"></canvas>
+    <script>
+        const canvas = document.querySelector("#result")
+        const ctx = canvas.getContext("2d")
+
+        let colors = []
+
+        function calculate(file) {
+            const reader = new FileReader()
+            reader.onload = function (e) {
+                let image = document.createElement("img")
+                image.src = e.target.result;
+                document.querySelector("#input").src = e.target.result
+                image.onload = () => {
+                    canvas.width = image.width
+                    canvas.height = image.height
+                    ctx.imageSmoothingEnabled = false
+                    ctx.drawImage(image, 0, 0)
+                    colors = getColors(ctx.getImageData(0, 0, image.width, image.height))
+                    ctx.clearRect(0, 0, image.width, image.height)
+                }
+            }
+            reader.readAsDataURL(file)
+        }
+
+        function doThingy() {
+            let mode = document.querySelector("#mode").value
+            if (mode.startsWith("sort")) {
+                let index = parseInt(mode[4])
+                canvas.height = 64
+                canvas.width = 64 * colors.length
+                let sorted = colors.toSorted((a, b) => RGBtoHSV(a)[index] - RGBtoHSV(b)[index])
+                for (let color of sorted) {
+                    ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`
+                    ctx.fillRect(sorted.indexOf(color) * 64, 0, 64, 64)
+                }
+            }
+            if (mode == "average") {
+                let average = colors.reduce((a, b) => {
+                    return [
+                        a[0] + Math.pow(b[0], 2),
+                        a[1] + Math.pow(b[1], 2),
+                        a[2] + Math.pow(b[2], 2)
+                    ]
+                }, initialValue = [0, 0, 0])
+                canvas.width = 128
+                canvas.height = 128
+                ctx.fillStyle = `rgb(${Math.sqrt(average[0] / colors.length)},${Math.sqrt(average[1] / colors.length)},${Math.sqrt(average[2] / colors.length)})`
+                ctx.fillRect(0, 0, 128, 128)
+            }
+        }
+
+        function getColors(data) {
+            let count = 0
+            let tolerance = document.querySelector("#tolerance").value
+            const colors = new Set()
+            for (let i = 0; i < data.data.length; i += 4) {
+                if (count > 256) break
+                let thisColor = [data.data[i], data.data[i + 1], data.data[i + 2]].toString()
+                let close = false
+                for (let color of colors) close = close || colorsAreClose(color, thisColor, tolerance = tolerance)
+                if (!close) {
+                    colors.add(thisColor)
+                    count++
+                }
+            }
+            const split = []
+            colors.forEach(color => {
+                split.push(color.split(",").map(Number))
+            })
+            return split
+        }
+
+        function colorsAreClose(colorStr1, colorStr2, tolerance = 1) {
+            const color1 = colorStr1.split(',').map(Number);
+            const color2 = colorStr2.split(',').map(Number);
+
+            return Math.abs(color1[0] - color2[0]) + Math.abs(color1[1] - color2[1]) + Math.abs(color1[2] - color2[2]) < tolerance
+        }
+
+        function RGBtoHSV(color) {
+            r = color[0]
+            g = color[1]
+            b = color[2]
+            var max = Math.max(r, g, b), min = Math.min(r, g, b),
+                d = max - min,
+                h,
+                s = (max === 0 ? 0 : d / max),
+                v = max / 255;
+
+            switch (max) {
+                case min: h = 0; break;
+                case r: h = (g - b) + d * (g < b ? 6 : 0); h /= 6 * d; break;
+                case g: h = (b - r) + d * 2; h /= 6 * d; break;
+                case b: h = (r - g) + d * 4; h /= 6 * d; break;
+            }
+
+            return [h, s, v]
+        }
+    </script>
+    <style>
+        :root {
+            background: rgb(36, 36, 36);
+            color: white;
+            font-family: sans-serif;
+        }
+
+        #input {
+            height: 64px;
+            vertical-align: middle;
+        }
+    </style>
+</body>
+</html>
