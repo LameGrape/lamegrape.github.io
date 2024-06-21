@@ -21,7 +21,8 @@
         uploading image)</span><br>
     <p hidden id="help">left click to copy hex, right click to delete</p>
     <canvas id="colors" height="0" oncontextmenu="return false"></canvas><br>
-    <button id="go" onclick="doThingy()">GO!!!</button><br>
+    <button id="go" onclick="doThingy()">GO!!!</button> <button hidden id="resetColors"
+        onclick="colors = fileColors.slice()">Reset colors to image</button><br>
     <canvas id="result"></canvas>
     <p hidden id="averageResult"></p>
     <script>
@@ -34,6 +35,7 @@
         let selection = 0
         const mouse = { x: 0, y: 0 }
 
+        let fileColors = []
         let colors = []
 
         function calculate(file) {
@@ -48,6 +50,8 @@
                     colorCtx.imageSmoothingEnabled = false
                     colorCtx.drawImage(image, 0, 0)
                     colors = getColors(colorCtx.getImageData(0, 0, image.width, image.height))
+                    fileColors = colors.slice()
+                    document.querySelector("#resetColors").removeAttribute("hidden")
                     drawColors()
                     document.querySelector("#help").removeAttribute("hidden")
                 }
