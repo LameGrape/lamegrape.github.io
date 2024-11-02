@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Four Dimensional Parabolas Are Just Hecking Spheres</title>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lamegrape.github.io/writing/4d-functions">
+    <meta property="og:title" content="Four Dimensional Parabolas Are Just Hecking Spheres">
+    <meta property="og:description" content="A very Rigorous™ and Professional™ paper on four dimensional functions and how to view them.">
+    <meta property="og:image" content="https://lamegrape.github.io/writing/4d-functions/fig5-1.png">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    <style>
+        :root{
+            background: rgb(22, 22, 22);
+            color: white;
+            width: 50vw;
+            margin: 0 auto;
+            min-width: 300px;
+            text-align: justify;
+            font-size: large;
+        }
+        h1, h3{
+            text-align: center;
+        }
+        img{
+            width: 20vw;
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 5px;
+            min-width: 250px;
+        }
+        label{
+            font-size: 0.8em;
+            width: 30vw;
+            display: block;
+            text-align: center;
+            margin: 0 auto;
+            font-style: italic;
+            margin-bottom: 20px;
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Four Dimensional Parabolas Are Just Hecking Spheres</h1>
+    <h3>A very Rigorous&trade; and Professional&trade; paper on four dimensional functions and how to view them.</h3>
+    <br>
+    <p>If you've done any non-embarrassing amount of math, you know what a function graph is. It takes a function in the form of \(f(x) \Rightarrow y\), and iterates over \(x\), placing a point on a 2D graph at \((x, f(x))\). Or, in layman's terms, it uses the function to draw a curve. You may have also seen a 3D function graph, which takes in a function in the form of \(f(x,y) \Rightarrow z\), iterates through \(x\) and \(y\), and plots a point at \((x,y,f(x,y))\).</p>
+    <p>Why am I iterating the same concept again? <s>Because it makes the paper look more Professional&trade;</s> Because, by looking at how 2D and 3D functions are graphed, we can learn how to extend it beyond the third dimension. Yes, it's possible to graph in the fourth dimension. And contrary to what you may think, it's actually incredibly easy.</p>
+
+    <br>
+    <h2>Section 1 - Four Dimensional Functions</h2>
+    <p>I'm going to be real with you, I could write more in this section, but it would be incredibly boring. 4D functions are trivially easy to make, you probably already know how one would be made. It's literally just \(f(x,y,z) \Rightarrow w\). So instead let's just move on to the next section, which hopefully is slightly less boring.</p>
+
+    <h2>Section 2 - Actually Graphing the Function</h2>
+    <p>So remember when I said that 4D functions are incredibly easy? Yeah, I was kind of lying. Not entirely-- making them and getting values from them is still trivially simple --but that's only half the problem. Actually, make that a tenth of the problem. Numbers are useless if you don't have a way to view them, and although just listing all of them technically works, the human brain is not very good at looking at a long list of numbers and figuring out what shape it's making. So instead, we must look for visual ways of graphing the function.</p>
+    <p>Visualizing four dimensional crap is always daunting, considering we can't hecking see four dimensional stuff. However, here we have a convenient way of plotting the function. The function takes in 3 parameters and iterates them, so we know we can plot it to a 3D volume. The function then outputs one value. All that is required, therefore, is to make a 3D array of dots or some crap, and change their appearance based on the value of \(w\). One possible method is scaling the dots according to \(w\).</p>
+
+    <img src="fig2-1.png">
+    <label>Figure 2.1 - The array of dots that will be used for visualizations in the paper. Ignore the fact that they are cubes.</label>
+
+    <p>This can work, however we must be smart about how the scaling is applied. If we just scale directly based on \(w\), then the dots would quickly get too big.</p>
+
+    <img src="fig2-2.png">
+    <label>Figure 2.2 - \(x^2 + y^2 + z^2\) with dot scaling of \(w\). As you can see, you can't hecking see.</label>
+
+    <p>Instead, we should utilize a threshold. If the value of \(w\) is less than (or greater than, if that's your thing) the threshold, then that dot will be omitted. This alone won't solve the scaling issue, but if we map \(w\) thus that \(0 \Rightarrow 1\) and \(1 \Rightarrow 0\), then it should make the dots get smaller as \(w\) increases. A function that will satisfy those parameters would be \(|w - 1|\). Plugging that in, we get a much more coherent result.</p>
+
+    <img src="fig2-3.png">
+    <label>Figure 2.3 - \(x^2 + y^2 + z^2\) with dot scaling of \(|w - 1|\). Note that slightly more than what was said was used to achieve this result, I just didn't want to bore yall.</label>
+
+    <p>So there we have it. That's what a parabola looks like in 4D. We did it, we got to the title of the paper. But I guess we should at least be slightly rigorous, so let's prove that this is an accurate visualization of a 4D function.</p>
+
+    <br>
+    <h2>Section 3 - Verifying the Visualization</h2>
+
+    <p>The visualization is cool and all, but it would be even cooler if we did some math to prove it's correct. This is where 4D crap starts to get hard, since now we have to actually think about it. To make this easier, let's go through 2D and 3D functions first, then extend that knowlege to 4D.</p>
+    <p>How exactly am I going to go about proving this anyways? Well, I'm not a very good mathematician, nor was my shower session that sparked all of this some life changing event that made me a master of dimensions, so instead I'm just going to go the boring route and figure out logically what a parabola should look like in four dimensions, then compare that to our visualized result.</p>
+    <br>
+    <p>First, let's take a look at 2D parabolas. You know them, you probably have some sort of opinion on them, they're the classic \(x^2\). Since 2D funtcions only have one parameter, there's not much to talk about here, but it should be noted that as \(x\) increases, the output of the function increases. This seems quite obvious, but it should be stated for later.</p>
+
+    <img src="fig3-1.png">
+    <label>Figure 3.1 - A parabola. You all know what it looks like, I just want more images in the paper.</label>
+
+    <p>Next is the 3D parabola. Due to having two parameters, the function must be modified to be \(x^2 + y^2\). You might have noticed if you payed attention that the 4D parabola was \(x^2 + y^2 + z^2\). Thus, we can conclude that extending the parabola into more dimensions is as shrimple as adding in the extra parameters. However, that's irrelevant right now. What is relevant, is that now there are two parameters, which means two values that determine the output. One property we can observe is that in the case that \(x + y = n\), the output will always be the same for any combo of \(x\) and \(y\), as long as they equal \(n\). In order for \(x+y\) to equal \(n\) when given a value for \(x\), \(y\) must be set to a value that places \((x,y)\) on the edge of a circle with a radius of \(n\), thus producing the circular cross section of the 3D parabola.</p>
+
+    <img src="fig3-2.png">
+    <label>Figure 3.2 - A 3D parabola. Note the circular cross section easily visible at the top. I'm like a hecking tour guide.</label>
+
+    <p>Since a cross section of a four dimensional volume is three dimensional, in order for \(x+y+z = n\) to be satisfied on a 4D parabola, the points must be along a sphere with a radius of \(n\), since a sphere is obviously the three dimensional equivalent of a circle. Therefore, through this deduction, we can reason that the visualization must be accurate to what a 4D parabola looks like.</p>
+
+    <br>
+    <h2>Section 4 - Okay, but why is the cross section of a 4D object 3D?</h2>
+
+    <p>I suppose I might as well prove this while I'm at it. It should be noted that this section is dealing with function graph cross sections, not geometric cross sections. Does it make a difference? I think so.</p>
+    <p>Once again, let's start with the dimensions we can actually see. Let's take a 2D function, say \(sin(x)\), and take a cross section from it. To take a cross section, we have to make one of the parameters constant, thus locking it. \(f(x) \Rightarrow sin(x)\) only has one parameter, so we can change that into a constant, such as 5, giving us \(f(5)\). Because all the parameters are now constant, the function is now constant, so it can be fully solved for: \(sin(5) = -0.9589\dots\). There are no more paramters left to fill, so what we are left with is a 1D function, the result of the previous function coming out to \(f() \Rightarrow -0.9589\dots\). This function is constant, and generally we call this a hecking number. So 1D functions are all just constant numbers.</p>
+    <p>Now in 3D, we can apply the same technique to get a cross section of \(sin(x) + cos(y)\). We will lock one of the parameters, so let's go with \(y\): \(f(x, 5)\). Since \(y\) is now constant, we can remove the parameter and instead inject 5 directly into the function: \(f(x) \Rightarrow sin(x) + cos(5)\). This has made it into a 2D function, and by iterating \(x\), we can further reduce it to a bunch of 1D functions, creating an array of constant values, and giving us our cross section.</p>
+    <p>Finally, let's apply this to a 4D function. We'll use \(sin(x) + cos(y) + sin(z)\). Lock one of the parameters, so let's do \(z\): \(f(x,y,5)\). Removing the constant parameter, this makes the function into a 3D function: \(f(x,y) \Rightarrow sin(x) + cos(y) + sin(5)\). Now we can iterate \(y\), and doing so gives an array of 2D functions after removing the constant paramter, for example: \(f(x) \Rightarrow sin(x) + cos(5) + sin(5)\). Finally, we can iterate \(x\), making the functions constant, and giving us a final 3D array of constant values, concluding that the cross section of a 4D function is indeed 3D.</p>
+
+    <br>
+    <h2>Section 5 - Various 4D Functions</h2>
+
+    <p>With all that done, let's have a list of some functions in 4D, made using very hastily put together and very dubious code. I swear like every one of these implements this in a different way or something.</p>
+
+    <img src="fig5-1.png">
+    <label>\(f(x,y,z) \Rightarrow sin(x) + cos(y) + sin(z)\)</label>
+
+    <img src="fig5-2.png">
+    <label>\(f(x,y,z) \Rightarrow x + y + z\)</label>
+
+    <img src="fig5-3.png">
+    <label>\(f(x,y,z) \Rightarrow x * y * z\)</label>
+
+    <img src="fig5-4.png">
+    <label>\(f(x,y,z) \Rightarrow x\) (yup, just x)</label>
+
+    <h1>the end</h1>
+</body>
+</html>
